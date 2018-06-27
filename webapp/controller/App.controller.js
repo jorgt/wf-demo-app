@@ -44,12 +44,13 @@ sap.ui.define([
 				data: JSON.stringify({
 					definitionId: "testworkflowpoc",
 					context: {
-						Vendor: this.getView().getModel().getData().vendor
+						Vendor: this.getView().getModel().getData().vendor,
+						Requestor: this._getCurrentPerson()
 					}
 				}),
 				success: function(result) {
 					Toast.show('Workflow started with id: ' + result.id);
-					model.setProperty("/Vendor", this._resetVendor());
+					model.setProperty("/vendor", this._resetVendor());
 				}
 			});
 		},
@@ -70,18 +71,26 @@ sap.ui.define([
 			return token;
 		},
 
+		_getCurrentPerson: function() {
+		    var user = sap.ushell.Container.getUser();
+			return {
+			    Name: user.getFullName(),
+			    Email: user.getEmail()
+			};
+		},
+
 		_resetVendor: function() {
 			var tempId = (Math.round(Math.random() * Number.MAX_SAFE_INTEGER)).toString(16);
-		
+
 			return {
-					TempId: tempId,
-					Name: '',
-					Street: '',
-					HouseNumber: '',
-					PostCode: '',
-					City: '',
-					Country: 'Australia'
-				}
+				TempId: tempId,
+				Name: '',
+				Street: '',
+				HouseNumber: '',
+				PostCode: '',
+				City: '',
+				Country: 'Australia'
+			}
 		}
 	});
 });
