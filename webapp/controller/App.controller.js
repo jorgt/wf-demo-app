@@ -1,23 +1,23 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
-	"sap/m/MessageToast",
-], function(Controller, JSONModel, Toast) {
+	"sap/m/MessageToast"
+], function (Controller, JSONModel, Toast) {
 	"use strict";
 
 	return Controller.extend("demo.app.controller.App", {
-		onInit: function() {
+		onInit: function () {
 			this.getView().setModel(new JSONModel({
 				vendor: this._resetVendor(),
 				submitEnabled: false
 			}));
 		},
 
-		onSubmitButtonPress: function() {
+		onSubmitButtonPress: function () {
 			this._startInstance(this._fetchToken());
 		},
 
-		onVerifyVendor: function() {
+		onVerifyVendor: function () {
 			var fields = this.getView().byId('vendorInputForm').getContent();
 			this.getView().getModel().setProperty('/submitEnabled', true);
 
@@ -28,11 +28,11 @@ sap.ui.define([
 			}
 		},
 
-		startWorkflow: function() {
+		startWorkflow: function () {
 			this._startInstance(this._fetchToken());
 		},
 
-		_startInstance: function(token) {
+		_startInstance: function (token) {
 			$.ajax({
 				url: "/bpmworkflowruntime/rest/v1/workflow-instances",
 				method: "POST",
@@ -42,20 +42,20 @@ sap.ui.define([
 					"X-CSRF-Token": token
 				},
 				data: JSON.stringify({
-					definitionId: "testworkflowpoc",
+					definitionId: "workflow",
 					context: {
 						Vendor: this.getView().getModel().getData().vendor,
 						Requestor: this._getCurrentPerson()
 					}
 				}),
-				success: function(result) {
+				success: function (result) {
 					Toast.show('Workflow started with id: ' + result.id);
-					model.setProperty("/vendor", this._resetVendor());
-				}
+					this.getView().getModel().setProperty("/vendor", this._resetVendor());
+				}.bind(this)
 			});
 		},
 
-		_fetchToken: function() {
+		_fetchToken: function () {
 			var token;
 			$.ajax({
 				url: "/bpmworkflowruntime/rest/v1/xsrf-token",
@@ -64,22 +64,23 @@ sap.ui.define([
 				headers: {
 					"X-CSRF-Token": "Fetch"
 				},
-				success: function(result, xhr, data) {
+				success: function (result, xhr, data) {
 					token = data.getResponseHeader("X-CSRF-Token");
 				}
 			});
 			return token;
 		},
 
-		_getCurrentPerson: function() {
-		    var user = sap.ushell.Container.getUser();
+		_getCurrentPerson: function () {
+			var user = sap.ushell.Container.getUser();
 			return {
-			    Name: user.getFullName(),
-			    Email: user.getEmail()
+				Name: user.getFullName(),
+				Email: user.getEmail(),
+				Id: user.getId()
 			};
 		},
 
-		_resetVendor: function() {
+		_resetVendor: function () {
 			var tempId = (Math.round(Math.random() * Number.MAX_SAFE_INTEGER)).toString(16);
 
 			return {
@@ -90,7 +91,7 @@ sap.ui.define([
 				PostCode: '',
 				City: '',
 				Country: 'Australia'
-			}
+			};
 		}
 	});
 });

@@ -13,16 +13,7 @@
 			"id": "servicecatalog.connectivityComponent",
 			"version": "0.0.0"
 		},
-		"dataSources": {
-			"YPOC_APPROVER_SRV": {
-				"uri": "/SAP_Gateway/odata/SAP/YPOC_APPROVER_SRV;v=1/",
-				"type": "OData",
-				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/metadata.xml"
-				}
-			}
-		}
+		"dataSources": {}
 	},
 	"sap.ui": {
 		"technology": "UI5",
@@ -41,7 +32,8 @@
 		},
 		"supportedThemes": [
 			"sap_hcb",
-			"sap_belize"
+			"sap_belize",
+			"sap_belize_plus"
 		]
 	},
 	"sap.ui5": {
@@ -70,12 +62,6 @@
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
 					"bundleName": "demo.app.i18n.i18n"
-				}
-			},
-			"poc": {
-				"dataSource": "YPOC_APPROVER_SRV",
-				"settings": {
-					"json": true
 				}
 			}
 		},
